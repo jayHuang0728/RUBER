@@ -45,19 +45,19 @@ class Hybrid():
 
 if __name__ == '__main__':
     train_dir = ''
-    data_dir = 'data/'
+    data_dir = './data/'
     qmax_length, rmax_length = [20, 30]
-    fquery, freply = []
-    frword2vec = ''
+    fquery, freply = ['QA.txt', 'QA2.txt']
+    frword2vec = 'GoogleNews-vectors-negative300.txt'
 
     hybrid = Hybrid(data_dir, frword2vec, '%s.embed'%fquery, '%s.embed'%freply)
     """test"""
     out_file='word2vec_out'
 #    scores = hybrid.unref.scores(data_dir, '%s.sub'%fquery, '%s.sub'%freply, "%s.vocab%d"%(fquery,qmax_length), "%s.vocab%d"%(freply, rmax_length))
-    scores = hybrid.scores(data_dir, '%s.sub'%fquery, '%s.true.sub'%freply, out_file, '%s.vocab%d'%(fquery, qmax_length),'%s.vocab%d'%(freply, rmax_length))
-    for i, s in enumerate(scores):
-        print i,s
-    print 'avg:%f'%(sum(scores)/len(scores))
+    # scores = hybrid.scores(data_dir, '%s.sub'%fquery, '%s.true.sub'%freply, out_file, '%s.vocab%d'%(fquery, qmax_length),'%s.vocab%d'%(freply, rmax_length))
+    # for i, s in enumerate(scores):
+    #     print(i,s)
+    # print('avg:%f'%(sum(scores)/len(scores)))
 
     """train"""
-#    hybrid.train_unref(data_dir, fquery, freply)
+    hybrid.train_unref(data_dir, fquery, freply)

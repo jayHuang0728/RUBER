@@ -2,7 +2,7 @@ __author__ = 'liming-vie'
 
 import os
 import random
-import cPickle
+import pickle
 import numpy as np
 import tensorflow as tf
 import data_helpers
@@ -22,7 +22,7 @@ class Unreferenced():
             init_learning_rate=1e-4,
             l2_regular=0.1,
             margin=0.5,
-            train_dir='train_data/'
+            train_dir='./train_data/'
             ):
         """
         Initialize related variables and construct the neural network graph.
@@ -42,9 +42,9 @@ class Unreferenced():
         self.rmax_length = rmax_length
         random.seed()
 
-        print 'Loading embedding matrix'
-        qembed = cPickle.load(open(fqembed, 'rb'))
-        rembed = cPickle.load(open(frembed, 'rb'))
+        print('Loading embedding matrix')
+        qembed = pickle.load(open(fqembed, 'rb'))
+        rembed = pickle.load(open(frembed, 'rb'))
 
         config = tf.ConfigProto(allow_soft_placement = True)
         config.gpu_options.allow_growth = True
@@ -215,10 +215,10 @@ class Unreferenced():
         """
         ckpt = tf.train.get_checkpoint_state(self.train_dir)
         if ckpt and tf.train.checkpoint_exists(ckpt.model_checkpoint_path):
-            print ('Restoring model from %s'%ckpt.model_checkpoint_path)
+            print('Restoring model from %s'%ckpt.model_checkpoint_path)
             self.saver.restore(self.session, ckpt.model_checkpoint_path)
         else:
-            print ('Initializing model variables')
+            print('Initializing model variables')
             self.session.run(tf.global_variables_initializer())
 
     def train(self, data_dir, fquery, freply,
@@ -239,7 +239,7 @@ class Unreferenced():
                 # save checkpoint
                 if step % steps_per_checkpoint == 0:
                     loss /= steps_per_checkpoint
-                    print ("global_step %d, loss %f, learning rate %f"  \
+                    print("global_step %d, loss %f, learning rate %f"  \
                             %(step, loss, self.learning_rate.eval()))
 
                     if loss > max(prev_losses):
@@ -256,9 +256,9 @@ class Unreferenced():
                     reply_batch, reply_sizes, idx = self.get_batch(replies, data_size, 10, idx)
                     input_feed = self.make_input_feed(query_batch, query_sizes, reply_batch, reply_sizes, training=False)
                     score, tests = self.session.run([self.pos_score, self.test], input_feed)
-                    print '-------------'
+                    print('-------------')
                     for s, t in zip(score[:10], tests[:10]):
-                        print s, t
+                        print(s, t)
  #                   """
 
     def scores(self, data_dir, fquery, freply, fqvocab, frvocab, init=False):
@@ -284,6 +284,6 @@ class Unreferenced():
                 scores.append(score[0])
             """ Debug
             for i, s in enumerate(scores):
-                print i,s
+                print(i,s)
             """
         return scores
